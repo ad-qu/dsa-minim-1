@@ -1,8 +1,8 @@
 package edu.upc.eetac.dsa.services;
 
-import edu.upc.eetac.dsa.Manager;
 import edu.upc.eetac.dsa.models.*;
-import edu.upc.eetac.dsa.ManagerImpl;
+import edu.upc.eetac.dsa.JuegoManager;
+import edu.upc.eetac.dsa.JuegoManagerImpl;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -18,26 +18,29 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "/Manager", description = "Endpoint to User Service")
-@Path("/Manager")
+@Api(value = "/JuegoManager", description = "Endpoint to User Service")
+@Path("/JuegoManager")
 
 public class ManagerService {
 
     static final Logger logger = Logger.getLogger(ManagerService.class);
 
-    private Manager manager;
+    private JuegoManager manager;
 
     public ManagerService() {
 
         PropertyConfigurator.configure("src/main/resources/log4j.properties");
 
-        this.manager = ManagerImpl.getInstance();
+        this.manager = JuegoManagerImpl.getInstance();
 
-        if (this.manager.getMapUsuarios().size() == 0) {
+            Usuario usuario1 = new Usuario("Adrián", "Quirós", "15-09-2000",
+                    "adrian.quiros@estudiantat.upc.edu", "12345");
 
-            //Usuario ElChupaCabras = new Persona("1", "ad-qu", "A");
+            Usuario usuario2 = new Usuario("Rodolfo", "Rangel", "05-10-1960",
+                "rodolfo.rangel@gmail.com", "12345");
 
-            //this.manager.addUsuario(ElChupaCabras);
+            this.manager.RegistrarUsuario(usuario1);
+            this.manager.RegistrarUsuario(usuario2);
         }
     }
 
@@ -48,25 +51,25 @@ public class ManagerService {
     })
     @Path("/Usuarios")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUsers() {
+    public Response getUsuarios() {
 
-        List<Usuario> personas = this.manager.getUsuario();
-        GenericEntity<List<Usuario>> entity = new GenericEntity<List<Usuario>>(usuarios) {
+        List<Usuario> usuario = this.manager.getListaDeUsuarios();
+        GenericEntity<List<Usuario>> entity = new GenericEntity<List<Usuario>>(usuario) {
         };
         return Response.status(201).entity(entity).build();
     }
 
     @GET
-    @ApiOperation(value = "Get all partidas", notes = "")
+    @ApiOperation(value = "Get all objetos", notes = "")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Partida.class, responseContainer = "List"),
+            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer = "List"),
     })
 
-    @Path("/Partidas")
+    @Path("/Objetos")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLabs() {
-        List<Partida> labs = this.manager.getPartidas();
-        GenericEntity<List<Partida>> entity = new GenericEntity<List<Partida>>(partidas) {
+    public Response getObjetos() {
+        List<Objeto> TiendaDeObjetos = this.manager.getListaDeObjetos();
+        GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(TiendaDeObjetos); {
         };
         return Response.status(201).entity(entity).build();
     }
